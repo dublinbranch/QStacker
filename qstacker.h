@@ -3,7 +3,7 @@
 
 #include <QByteArray>
 
-Q_REQUIRED_RESULT std::string stacker(uint skip);
-Q_REQUIRED_RESULT QByteArray QStacker(uint skip);
+Q_REQUIRED_RESULT std::string stacker(uint skip=3);
+Q_REQUIRED_RESULT QByteArray QStacker(uint skip=4);
 
 #endif // QSTACKER_H
