@@ -3,6 +3,8 @@ a nice helping function for the NEEDED backward-cpp
 
 Is literally 2 function on top of https://github.com/bombela/backward-cpp
 
-rember to link against LIBS += -ldw
+rember to link against
+
+LIBS += -ldw -ldl
 
 zypper in libdw-devel
