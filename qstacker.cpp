@@ -1,6 +1,8 @@
 #include "qstacker.h"
 #include "backward.hpp"
 #include <mutex>
+#include <QString>
+
 std::string stacker(uint skip) {
 	/** For loading from an arbitrary position
 	ucontext_t uctx;
@@ -35,6 +37,11 @@ std::string stacker(uint skip) {
 QByteArray QStacker(uint skip) {
 	return QByteArray::fromStdString(stacker(skip));
 }
+QString QStacker16(uint skip)
+{
+	return QString::fromStdString(stacker(skip));
+}
+
 
 ///** ***************/
 ///** POWER SUPREME */
@@ -68,3 +75,4 @@ void __cxa_throw(void*           thrown_exception,
 	orig_cxa_throw(thrown_exception, pvtinfo, dest);
 }
 }
+
