@@ -68,7 +68,7 @@ void __cxa_throw(void*           thrown_exception,
 		QString* th = static_cast<QString*>(thrown_exception);
 		qDebug().noquote() << *th << QStacker(5);
 	} else {
-		qCritical().noquote() << QStacker();
+		qCritical().noquote() << QStacker16();
 	}
 
 	//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown
