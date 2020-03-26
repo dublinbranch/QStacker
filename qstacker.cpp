@@ -3,6 +3,11 @@
 #include <mutex>
 #include <QString>
 
+#include <QString>
+#include <dlfcn.h>
+#include <execinfo.h>
+#include <QDebug>
+
 std::string stacker(uint skip) {
 	/** For loading from an arbitrary position
 	ucontext_t uctx;
@@ -43,13 +48,19 @@ QString QStacker16(uint skip)
 }
 
 
+Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* file, int line) Q_DECL_NOTHROW {
+	(void)(where);
+	(void)(what);
+	(void)(file);
+	(void)(line);
+	qCritical().noquote() << QStacker16();
+	//We can not throw! this function is forcefully declared Q_DECL_NOTHROW and can not be changed, but at least we now know why...
+	abort();
+}
+
 ///** ***************/
 ///** POWER SUPREME */
 ///** ***************/
-#include <QString>
-#include <dlfcn.h>
-#include <execinfo.h>
-#include <QDebug>
 
 //define the functor
 typedef void (*cxa_throw_type)(void*, std::type_info*, void (*)(void*));
