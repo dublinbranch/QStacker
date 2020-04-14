@@ -1,14 +1,14 @@
 #include "qstacker.h"
 #include "backward.hpp"
-#include <mutex>
 #include <QString>
+#include <mutex>
 
+#include <QDebug>
 #include <QString>
 #include <dlfcn.h>
 #include <execinfo.h>
-#include <QDebug>
 
-std::string stacker(uint skip) {
+std::string stacker(uint skip, QStackerOpt opt) {
 	/** For loading from an arbitrary position
 	ucontext_t uctx;
 	getcontext(&uctx);
@@ -28,9 +28,9 @@ std::string stacker(uint skip) {
 	st.skip_n_firsts(skip); //skip internal lib stuff
 
 	Printer p;
-	p.snippet = true;
-	p.object  = true;
-	p.address = true;
+	p.snippet = opt.snippet;
+	p.object  = opt.object;
+	p.address = opt.address;
 
 	std::ostringstream stream;
 	p.print(st, stream);
@@ -39,14 +39,12 @@ std::string stacker(uint skip) {
 	return str;
 }
 
-QByteArray QStacker(uint skip) {
-	return QByteArray::fromStdString(stacker(skip));
+QByteArray QStacker(uint skip, QStackerOpt opt) {
+	return QByteArray::fromStdString(stacker(skip, opt));
 }
-QString QStacker16(uint skip)
-{
-	return QString::fromStdString(stacker(skip));
+QString QStacker16(uint skip, QStackerOpt opt) {
+	return QString::fromStdString(stacker(skip, opt));
 }
-
 
 Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* file, int line) Q_DECL_NOTHROW {
 	(void)(where);
@@ -69,8 +67,8 @@ static cxa_throw_type orig_cxa_throw = (cxa_throw_type)dlsym(RTLD_NEXT, "__cxa_t
 extern "C" {
 //And NOW override it
 void __cxa_throw(void*           thrown_exception,
-				 std::type_info* pvtinfo,
-				 void (*dest)(void*)) {
+                 std::type_info* pvtinfo,
+                 void (*dest)(void*)) {
 
 	static const QString x;
 	auto                 v1 = pvtinfo->hash_code();
@@ -87,3 +85,6 @@ void __cxa_throw(void*           thrown_exception,
 }
 }
 
+QString QStacker16Light(uint skip, QStackerOpt opt) {
+	return QStacker16(skip, opt);
+}
