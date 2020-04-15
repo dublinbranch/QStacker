@@ -36,6 +36,14 @@ std::string stacker(uint skip, QStackerOpt opt) {
 	p.print(st, stream);
 	std::string str = stream.str();
 
+	//Remove all the stuff before our process (if set)
+	if (!StackerMinLevel.empty()) {
+		auto start = str.find(StackerMinLevel);
+		//we are pre pended by        Source "../ = 12
+		start = start - 12;
+		str   = str.substr(start);
+	}
+
 	return str;
 }
 
@@ -70,14 +78,19 @@ void __cxa_throw(void*           thrown_exception,
                  std::type_info* pvtinfo,
                  void (*dest)(void*)) {
 
-	static const QString x;
-	auto                 v1 = pvtinfo->hash_code();
-	auto                 v2 = typeid(x).hash_code();
+	auto              v1 = pvtinfo->hash_code();
+	static const auto v2 = typeid(QString()).hash_code();
+	QString           stack;
+	if (cxaSilent) {
+		cxaSilent = false;
+	} else {
+		stack = QStacker16Light(5);
+	}
 	if (v1 == v2) { //IF QString has been thrown is by us, and usually handled too
 		QString* th = static_cast<QString*>(thrown_exception);
-		qDebug().noquote() << *th << QStacker(5);
+		qCritical().noquote() << *th << stack;
 	} else {
-		qCritical().noquote() << QStacker16();
+		qCritical().noquote() << stack;
 	}
 
 	//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown

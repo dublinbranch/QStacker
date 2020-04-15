@@ -12,5 +12,12 @@ Q_REQUIRED_RESULT std::string stacker(uint skip = 3, QStackerOpt opt = QStackerO
 Q_REQUIRED_RESULT QByteArray  QStacker(uint skip = 4, QStackerOpt opt = QStackerOpt());
 Q_REQUIRED_RESULT QString     QStacker16(uint skip = 4, QStackerOpt opt = QStackerOpt());
 Q_REQUIRED_RESULT QString     QStacker16Light(uint skip = 4, QStackerOpt opt = QStackerOptLight);
-
+/**
+ * @brief StackerMinLevel is used to cut away the initial part of the stack trace
+ * execially when running a thread there is a lot of stuff
+ * It must be the name of the folder from which the code has been compiled
+ */
+inline std::string StackerMinLevel;
+//Next throw will not append stack trace, reset after use
+inline thread_local bool cxaSilent = false;
 #endif // QSTACKER_H
