@@ -78,21 +78,43 @@ void __cxa_throw(void*           thrown_exception,
                  std::type_info* pvtinfo,
                  void (*dest)(void*)) {
 
-	auto              v1 = pvtinfo->hash_code();
-	static const auto v2 = typeid(QString()).hash_code();
-	QString           stack;
-	if (cxaSilent) {
-		cxaSilent = false;
-	} else {
-		stack = QStacker16Light(5);
-	}
-	if (v1 == v2) { //IF QString has been thrown is by us, and usually handled too
-		QString* th = static_cast<QString*>(thrown_exception);
-		qCritical().noquote() << *th << stack;
-	} else {
-		qCritical().noquote() << stack;
+	if (cxaLevel == CxaLevel::none) { //skip that part ? Do that make even sense to save those 3 things ?
+		//reset after use
+		cxaLevel = CxaLevel::critical;
+		orig_cxa_throw(thrown_exception, pvtinfo, dest);
 	}
 
+	auto              v1 = pvtinfo->hash_code();
+	static const auto v2 = typeid(QString()).hash_code();
+	QString           msg;
+	if (cxaNoStack) {
+		cxaNoStack = false;
+	} else {
+		msg = QStacker16Light(5);
+	}
+
+	if (v1 == v2) { //IF QString has been thrown is by us, and usually handled too
+		QString* th = static_cast<QString*>(thrown_exception);
+		msg.prepend(*th);
+	}
+
+	switch (cxaLevel) {
+	case CxaLevel::warn:
+		qWarning().noquote() << msg;
+		break;
+	case CxaLevel::debug:
+		qDebug().noquote() << msg;
+		break;
+	case CxaLevel::critical:
+		qCritical().noquote() << msg;
+		break;
+	default:
+		//none
+		break;
+	}
+
+	//reset after use
+	cxaLevel = CxaLevel::critical;
 	//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown
 	orig_cxa_throw(thrown_exception, pvtinfo, dest);
 }
