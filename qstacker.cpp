@@ -84,16 +84,18 @@ void __cxa_throw(void*           thrown_exception,
 		orig_cxa_throw(thrown_exception, pvtinfo, dest);
 	}
 
-	auto              v1 = pvtinfo->hash_code();
-	static const auto v2 = typeid(QString()).hash_code();
-	QString           msg;
+	static const QString x;
+	static const auto    qstringCode = typeid(x).hash_code();
+	auto                 exceptionTypeCode = pvtinfo->hash_code();
+
+	QString msg;
 	if (cxaNoStack) {
 		cxaNoStack = false;
 	} else {
 		msg = QStacker16Light(5);
 	}
 
-	if (v1 == v2) { //IF QString has been thrown is by us, and usually handled too
+	if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
 		QString* th = static_cast<QString*>(thrown_exception);
 		msg.prepend(*th);
 	}
