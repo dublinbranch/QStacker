@@ -39,9 +39,13 @@ std::string stacker(uint skip, QStackerOpt opt) {
 	//Remove all the stuff before our process (if set)
 	if (!StackerMinLevel.empty()) {
 		auto start = str.find(StackerMinLevel);
-		//we are pre pended by        Source "../ = 12
-		start = start - 12;
-		str   = str.substr(start);
+		//we are pre pended by        '#2    Source "../' = 17
+		start = start - 17;
+		if (opt.prependReturn) {
+			str = "\n" + str.substr(start);
+		} else {
+			str = str.substr(start);
+		}
 	}
 
 	return str;
@@ -85,7 +89,7 @@ void __cxa_throw(void*           thrown_exception,
 	}
 
 	static const QString x;
-	static const auto    qstringCode = typeid(x).hash_code();
+	static const auto    qstringCode       = typeid(x).hash_code();
 	auto                 exceptionTypeCode = pvtinfo->hash_code();
 
 	QString msg;

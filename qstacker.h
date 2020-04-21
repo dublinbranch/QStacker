@@ -6,12 +6,14 @@ struct QStackerOpt {
 	bool snippet = true;
 	bool object  = true;
 	bool address = true;
+	//prepend a newline
+	bool prependReturn = true;
 };
 constexpr QStackerOpt QStackerOptLight = {false, false, false};
 Q_REQUIRED_RESULT std::string stacker(uint skip = 3, QStackerOpt opt = QStackerOpt());
 Q_REQUIRED_RESULT QByteArray  QStacker(uint skip = 4, QStackerOpt opt = QStackerOpt());
 Q_REQUIRED_RESULT QString     QStacker16(uint skip = 4, QStackerOpt opt = QStackerOpt());
-Q_REQUIRED_RESULT QString     QStacker16Light(uint skip = 4, QStackerOpt opt = QStackerOptLight);
+Q_REQUIRED_RESULT QString     QStacker16Light(uint skip = 5, QStackerOpt opt = QStackerOptLight);
 /**
  * @brief StackerMinLevel is used to cut away the initial part of the stack trace
  * execially when running a thread there is a lot of stuff
