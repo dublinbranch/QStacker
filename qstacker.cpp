@@ -63,7 +63,7 @@ Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* 
 	(void)(what);
 	(void)(file);
 	(void)(line);
-	qCritical().noquote() << QStacker16();
+	qWarning().noquote() << QStacker16();
 	//We can not throw! this function is forcefully declared Q_DECL_NOTHROW and can not be changed, but at least we now know why...
 	abort();
 }
@@ -112,7 +112,7 @@ void __cxa_throw(void*           thrown_exception,
 		qDebug().noquote() << msg;
 		break;
 	case CxaLevel::critical:
-		qCritical().noquote() << msg;
+		qWarning().noquote() << msg;
 		break;
 	default:
 		//none
