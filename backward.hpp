@@ -3418,8 +3418,10 @@ private:
     bool already_indented = true;
 
     if (!trace.source.filename.size() || object) {
-      os << "   Object \"" << trace.object_filename << "\", at " << trace.addr
-         << ", in " << trace.object_function << "\n";
+		//this is honestly useless, I know which program I am !
+		//also no need to write twice the function name
+		//os << "   Object \"" << trace.object_filename << "\", at " << trace.addr
+        // << ", in " << trace.object_function << "\n";
       already_indented = false;
     }
 
@@ -3477,7 +3479,7 @@ private:
   void print_source_loc(std::ostream &os, const char *indent,
                         const ResolvedTrace::SourceLoc &source_loc,
                         void *addr = nullptr) {
-	os << indent << "Source \"" << source_loc.filename << ":"
+	os << indent << "Source " << source_loc.filename << ":"
 	   << source_loc.line << " in " << source_loc.function;
 
     if (address && addr != nullptr) {
