@@ -34,7 +34,7 @@ std::string stacker(uint skip, QStackerOpt opt) {
 
 	std::ostringstream stream;
 	p.print(st, stream);
-	std::string str = stream.str();
+	std::string str = "\n" + stream.str();
 
 	//Remove all the stuff before our process (if set)
 	if (!StackerMinLevel.empty()) {
