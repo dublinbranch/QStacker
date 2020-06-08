@@ -38,7 +38,11 @@ std::string stacker(uint skip, QStackerOpt opt) {
 
 	//Remove all the stuff before our process (if set)
 	if (!StackerMinLevel.empty()) {
+
 		auto start = str.find(StackerMinLevel);
+		if (start == std::string::npos) {
+			return str;
+		}
 		//TODO search properly, the path can be different -.-
 		//we are pre pended by        '#2    Source "../' = 17
 		start = start - 17;
@@ -48,7 +52,6 @@ std::string stacker(uint skip, QStackerOpt opt) {
 			str = str.substr(start);
 		}
 	}
-
 	return str;
 }
 
