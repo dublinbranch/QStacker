@@ -45,7 +45,7 @@ std::string stacker(uint skip, QStackerOpt opt) {
 		}
 		//TODO search properly, the path can be different -.-
 		//we are pre pended by        '#2    Source "../' = 17
-		start = start - 17;
+		start = start - 16;
 		if (opt.prependReturn) {
 			str = "\n" + str.substr(start);
 		} else {
