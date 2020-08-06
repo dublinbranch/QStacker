@@ -93,8 +93,12 @@ void __cxa_throw(void*           thrown_exception,
 	}
 
 	static const QString x;
-	static const auto    qstringCode       = typeid(x).hash_code();
-	auto                 exceptionTypeCode = pvtinfo->hash_code();
+	static const auto    qstringCode = typeid(x).hash_code();
+
+	static const char* cc;
+	static const auto  ccCode = typeid(cc).hash_code();
+
+	auto exceptionTypeCode = pvtinfo->hash_code();
 
 	QString msg;
 	if (cxaNoStack) {
@@ -104,7 +108,10 @@ void __cxa_throw(void*           thrown_exception,
 	}
 
 	if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
-		QString* th = static_cast<QString*>(thrown_exception);
+		auto th = static_cast<QString*>(thrown_exception);
+		msg.prepend(*th);
+	} else if (exceptionTypeCode == ccCode) {
+		auto th = static_cast<const char*>(thrown_exception);
 		msg.prepend(*th);
 	}
 
