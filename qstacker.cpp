@@ -62,6 +62,14 @@ QString QStacker16(uint skip, QStackerOpt opt) {
 	return QString::fromStdString(stacker(skip, opt));
 }
 
+/**
+ * @brief qt_assert_x is the internal handle used by qt to report error, sadly is missing the stack trace so 99% of the time 
+ * you have ABSOLUTELY no clue where it happened, fixed!
+ * @param where
+ * @param what
+ * @param file
+ * @param line
+ */
 Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* file, int line) Q_DECL_NOTHROW {
 	(void)(where);
 	(void)(what);
