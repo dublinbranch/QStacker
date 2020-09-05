@@ -85,9 +85,9 @@ Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* 
 ///** ***************/
 
 //define the functor
-typedef void (*cxa_throw_type)(void*, std::type_info*, void (*)(void*));
+using cxa_throw_type = void(void*, std::type_info*, void (*)(void*));
 //now take the address of the REAL __cxa_throw
-static cxa_throw_type orig_cxa_throw = (cxa_throw_type)dlsym(RTLD_NEXT, "__cxa_throw");
+static cxa_throw_type* orig_cxa_throw = (cxa_throw_type*)dlsym(RTLD_NEXT, "__cxa_throw");
 extern "C" {
 //And NOW override it
 void __cxa_throw(void*           thrown_exception,
