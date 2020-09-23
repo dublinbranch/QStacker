@@ -133,7 +133,7 @@ void __cxa_throw(void*           thrown_exception,
 	case CxaLevel::critical:
 		qWarning().noquote() << msg;
 		break;
-	default:
+	case CxaLevel::none:
 		//none
 		break;
 	}
