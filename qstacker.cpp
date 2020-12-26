@@ -87,64 +87,79 @@ Q_CORE_EXPORT void qt_assert_x(const char* where, const char* what, const char* 
 //define the functor
 using cxa_throw_type = void(void*, std::type_info*, void (*)(void*));
 //now take the address of the REAL __cxa_throw
-static cxa_throw_type* orig_cxa_throw = (cxa_throw_type*)dlsym(RTLD_NEXT, "__cxa_throw");
+static cxa_throw_type* original_cxa_throw = (cxa_throw_type*)dlsym(RTLD_NEXT, "__cxa_throw");
 extern "C" {
 //And NOW override it
 void __cxa_throw(void*           thrown_exception,
                  std::type_info* pvtinfo,
                  void (*dest)(void*)) {
 
-	if (cxaLevel == CxaLevel::none) { //skip that part ? Do that make even sense to save those 3 things ?
+	//New (as of 12/2020 way of managing excetion, with ExceptionV2
+	//force a cast and look for our token
+	if (static_cast<ExceptionV2*>(thrown_exception)->uukey == uukeyV2) {
+		/* Our exception ALWAYS carry the trowing point
+		 * The exception point will be printed in case of missed catch
+		 * In fact we have to do nothing to properly managed them!
+		 */
+		original_cxa_throw(thrown_exception, pvtinfo, dest);
+	} else {
+		if (cxaLevel == CxaLevel::none) {
+			//reset after use
+			cxaLevel = CxaLevel::critical;
+			original_cxa_throw(thrown_exception, pvtinfo, dest);
+		}
+		static const QString x;
+		static const auto    qstringCode = typeid(x).hash_code();
+
+		auto exceptionTypeCode = pvtinfo->hash_code();
+
+		QString msg;
+		if (cxaNoStack) {
+			cxaNoStack = false;
+		} else {
+			msg = QStacker16Light(5);
+		}
+
+		if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
+			auto th = static_cast<QString*>(thrown_exception);
+			msg.prepend(*th);
+		} else {
+
+			auto th = static_cast<const char*>(thrown_exception);
+			msg.prepend(*th);
+		}
+
+		switch (cxaLevel) {
+		case CxaLevel::warn:
+			qWarning().noquote() << msg;
+			break;
+		case CxaLevel::debug:
+			qDebug().noquote() << msg;
+			break;
+		case CxaLevel::critical:
+			qWarning().noquote() << msg;
+			break;
+		case CxaLevel::none:
+			//none
+			break;
+		}
+
 		//reset after use
 		cxaLevel = CxaLevel::critical;
-		orig_cxa_throw(thrown_exception, pvtinfo, dest);
+		//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown
+		original_cxa_throw(thrown_exception, pvtinfo, dest);
 	}
-
-	static const QString x;
-	static const auto    qstringCode = typeid(x).hash_code();
-
-	static const char* cc;
-	static const auto  ccCode = typeid(cc).hash_code();
-
-	auto exceptionTypeCode = pvtinfo->hash_code();
-
-	QString msg;
-	if (cxaNoStack) {
-		cxaNoStack = false;
-	} else {
-		msg = QStacker16Light(5);
-	}
-
-	if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
-		auto th = static_cast<QString*>(thrown_exception);
-		msg.prepend(*th);
-	} else if (exceptionTypeCode == ccCode) {
-		auto th = static_cast<const char*>(thrown_exception);
-		msg.prepend(*th);
-	}
-
-	switch (cxaLevel) {
-	case CxaLevel::warn:
-		qWarning().noquote() << msg;
-		break;
-	case CxaLevel::debug:
-		qDebug().noquote() << msg;
-		break;
-	case CxaLevel::critical:
-		qWarning().noquote() << msg;
-		break;
-	case CxaLevel::none:
-		//none
-		break;
-	}
-
-	//reset after use
-	cxaLevel = CxaLevel::critical;
-	//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown
-	orig_cxa_throw(thrown_exception, pvtinfo, dest);
 }
 }
 
 QString QStacker16Light(uint skip, QStackerOpt opt) {
 	return QStacker16(skip, opt);
+}
+
+ExceptionV2::ExceptionV2(const QString& _msg) {
+	msg = _msg.toUtf8();
+}
+
+const char* ExceptionV2::what() const noexcept {
+	return msg.constData();
 }
