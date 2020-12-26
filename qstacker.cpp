@@ -157,7 +157,11 @@ QString QStacker16Light(uint skip, QStackerOpt opt) {
 }
 
 ExceptionV2::ExceptionV2(const QString& _msg) {
-	msg = _msg.toUtf8();
+	msg = _msg.toUtf8() + QStacker(4);
+}
+
+ExceptionV2::ExceptionV2(const char* _msg) {
+	msg = _msg + QStacker(4);
 }
 
 const char* ExceptionV2::what() const noexcept {

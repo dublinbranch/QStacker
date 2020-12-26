@@ -42,6 +42,7 @@ class ExceptionV2 : public std::exception {
 	const ulong uukey = uukeyV2;
 
 	ExceptionV2(const QString& _msg);
+	ExceptionV2(const char* _msg);
 
 	const char* what() const noexcept override;
 
