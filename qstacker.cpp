@@ -167,3 +167,19 @@ ExceptionV2::ExceptionV2(const char* _msg) {
 const char* ExceptionV2::what() const noexcept {
 	return msg.constData();
 }
+
+void messanger(const QString& msg, CxaLevel level) {
+	switch (level) {
+	case CxaLevel::critical:
+		qCritical() << msg;
+		return;
+	case CxaLevel::debug:
+		qDebug() << msg;
+		return;
+	case CxaLevel::warn:
+		qWarning() << msg;
+		return;
+	case CxaLevel::none:
+		return;
+	}
+}

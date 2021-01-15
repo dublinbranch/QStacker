@@ -50,4 +50,5 @@ class ExceptionV2 : public std::exception {
 	QByteArray msg;
 };
 
+void messanger(const QString& msg, CxaLevel level);
 #endif // QSTACKER_H
