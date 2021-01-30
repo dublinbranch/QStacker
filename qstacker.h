@@ -11,9 +11,9 @@ struct QStackerOpt {
 };
 constexpr QStackerOpt QStackerOptLight = {false, false, false};
 Q_REQUIRED_RESULT std::string stacker(uint skip = 3, QStackerOpt opt = QStackerOptLight);
-Q_REQUIRED_RESULT QByteArray QStacker(uint skip = 4, QStackerOpt opt = QStackerOptLight);
-Q_REQUIRED_RESULT QString QStacker16(uint skip = 4, QStackerOpt opt = QStackerOptLight);
-Q_REQUIRED_RESULT QString QStacker16Light(uint skip = 5, QStackerOpt opt = QStackerOptLight);
+Q_REQUIRED_RESULT QByteArray  QStacker(uint skip = 4, QStackerOpt opt = QStackerOptLight);
+Q_REQUIRED_RESULT QString     QStacker16(uint skip = 4, QStackerOpt opt = QStackerOptLight);
+Q_REQUIRED_RESULT QString     QStacker16Light(uint skip = 5, QStackerOpt opt = QStackerOptLight);
 /**
  * @brief StackerMinLevel is used to cut away the initial part of the stack trace
  * execially when running a thread there is a lot of stuff
@@ -41,9 +41,11 @@ class ExceptionV2 : public std::exception {
 	//We cast the obj and check if start with that to know is ours
 	const ulong uukey = uukeyV2;
 
-	ExceptionV2(const QString& _msg);
-	ExceptionV2(const char* _msg);
-
+	ExceptionV2() = default;
+	ExceptionV2(const QString& _msg, uint skip=4);
+	ExceptionV2(const char* _msg, uint skip=4);
+	ExceptionV2(const std::string& _msg, uint skip=4);
+	
 	const char* what() const noexcept override;
 
       private:

@@ -156,12 +156,16 @@ QString QStacker16Light(uint skip, QStackerOpt opt) {
 	return QStacker16(skip, opt);
 }
 
-ExceptionV2::ExceptionV2(const QString& _msg) {
-	msg = _msg.toUtf8() + QStacker(4);
+ExceptionV2::ExceptionV2(const QString& _msg, uint skip) {
+	msg = _msg.toUtf8() + QStacker(skip);
 }
 
-ExceptionV2::ExceptionV2(const char* _msg) {
-	msg = _msg + QStacker(4);
+ExceptionV2::ExceptionV2(const char* _msg, uint skip) {
+	msg = _msg + QStacker(skip);
+}
+
+ExceptionV2::ExceptionV2(const std::string& _msg, uint skip) {
+	msg = QByteArray::fromStdString(_msg) + QStacker(skip);
 }
 
 const char* ExceptionV2::what() const noexcept {
