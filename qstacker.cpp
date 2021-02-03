@@ -96,7 +96,8 @@ void __cxa_throw(void*           thrown_exception,
 
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
-	if (static_cast<ExceptionV2*>(thrown_exception)->uukey == uukeyV2) {
+	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
+	if (v2->uukey == uukeyV2) {
 		/* Our exception ALWAYS carry the trowing point
 		 * The exception point will be printed in case of missed catch
 		 * In fact we have to do nothing to properly managed them!
