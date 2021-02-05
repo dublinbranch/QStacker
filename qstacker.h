@@ -2,6 +2,8 @@
 #define QSTACKER_H
 
 #include <QByteArray>
+#include "exceptionv2.h"
+
 struct QStackerOpt {
 	bool snippet = true;
 	bool object  = true;
@@ -33,24 +35,6 @@ enum class CxaLevel {
 };
 //what level shall we use ? reset after use as critical
 inline thread_local CxaLevel cxaLevel = CxaLevel::critical;
-
-constexpr ulong uukeyV2 = 0xBADBEEFBADBEEF02;
-class ExceptionV2 : public std::exception {
-      public:
-	//This is an ugly hack to achieve a weird objective, but is a quite commont techique https://en.wikipedia.org/wiki/Hexspeak
-	//We cast the obj and check if start with that to know is ours
-	static constexpr ulong uukey = uukeyV2;
-
-	ExceptionV2() = default;
-	ExceptionV2(const QString& _msg, uint skip = 4);
-	ExceptionV2(const char* _msg, uint skip = 4);
-	ExceptionV2(const std::string& _msg, uint skip = 4);
-
-	const char* what() const noexcept override;
-
-      private:
-	QByteArray msg;
-};
 
 void messanger(const QString& msg, CxaLevel level);
 #endif // QSTACKER_H

@@ -97,7 +97,7 @@ void __cxa_throw(void*           thrown_exception,
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
 	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
-	if (v2->uukey == uukeyV2) {
+	if (v2->canaryKey == ExceptionV2::uukey) {
 		/* Our exception ALWAYS carry the trowing point
 		 * The exception point will be printed in case of missed catch
 		 * In fact we have to do nothing to properly managed them!
@@ -155,22 +155,6 @@ void __cxa_throw(void*           thrown_exception,
 
 QString QStacker16Light(uint skip, QStackerOpt opt) {
 	return QStacker16(skip, opt);
-}
-
-ExceptionV2::ExceptionV2(const QString& _msg, uint skip) {
-	msg = _msg.toUtf8() + QStacker(skip);
-}
-
-ExceptionV2::ExceptionV2(const char* _msg, uint skip) {
-	msg = _msg + QStacker(skip);
-}
-
-ExceptionV2::ExceptionV2(const std::string& _msg, uint skip) {
-	msg = QByteArray::fromStdString(_msg) + QStacker(skip);
-}
-
-const char* ExceptionV2::what() const noexcept {
-	return msg.constData();
 }
 
 void messanger(const QString& msg, CxaLevel level) {
