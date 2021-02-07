@@ -21,4 +21,29 @@ class ExceptionV2 : public std::exception {
       private:
 	QByteArray msg;
 };
+
+/*
+To extend do something like 
+
+class BadRequestEx : public ExceptionV2 {
+      public:
+	BadRequestEx(const QString& _msg)
+	    : ExceptionV2(_msg, 6) {
+	}
+};
+
+Or for something more creative 
+
+class DBException : public ExceptionV2 {
+      public:
+	enum Error : int {
+		NA = 0,
+		Connection,
+		Warning,
+		SchemaError
+	} errorType = Error::NA;
+	DBException(const QString& _msg, Error error);
+};
+
+*/
 #endif // EXCEPTIONV2_H
