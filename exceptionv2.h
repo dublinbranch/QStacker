@@ -18,8 +18,10 @@ class ExceptionV2 : public std::exception {
 
 	const char* what() const noexcept override;
 
-      private:
+      protected:
 	QByteArray msg;
+
+      private:
 };
 
 /*
