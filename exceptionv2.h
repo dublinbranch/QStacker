@@ -8,8 +8,9 @@ class ExceptionV2 : public std::exception {
       public:
 	//This is an ugly hack to achieve a weird objective, but is a quite commont techique https://en.wikipedia.org/wiki/Hexspeak
 	//We cast the obj and check if start with that to know is ours
-	static constexpr ulong uukey     = 0xBADBEEFBADBEEF02;
-	const ulong            canaryKey = uukey;
+	static constexpr ulong uukey      = 0xBADBEEFBADBEEF02;
+	const ulong            canaryKey  = uukey;
+	bool                   forcePrint = false;
 
 	ExceptionV2() = default;
 	ExceptionV2(const QString& _msg, uint skip = 4);

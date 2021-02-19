@@ -98,6 +98,9 @@ void __cxa_throw(void*           thrown_exception,
 	//force a cast and look for our token
 	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
 	if (v2->canaryKey == ExceptionV2::uukey) {
+		if (v2->forcePrint) {
+			qCritical() << v2->what();
+		}
 		/* Our exception ALWAYS carry the trowing point
 		 * The exception point will be printed in case of missed catch
 		 * In fact we have to do nothing to properly managed them!
