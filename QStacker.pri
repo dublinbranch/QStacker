@@ -1,4 +1,6 @@
- SOURCES += \
+CONFIG += object_parallel_to_source
+
+SOURCES += \
 	$$PWD/exceptionv2.cpp \
     $$PWD/qstacker.cpp 
     
