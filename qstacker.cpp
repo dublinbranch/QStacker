@@ -135,13 +135,13 @@ void __cxa_throw(void*           thrown_exception,
 
 		switch (cxaLevel) {
 		case CxaLevel::warn:
-			qWarning().noquote() << msg;
+			qWarning().noquote() << msg << QStacker16Light();
 			break;
 		case CxaLevel::debug:
-			qDebug().noquote() << msg;
+			qDebug().noquote() << msg << QStacker16Light();
 			break;
 		case CxaLevel::critical:
-			qWarning().noquote() << msg;
+			qWarning().noquote() << msg << QStacker16Light();
 			break;
 		case CxaLevel::none:
 			//none
