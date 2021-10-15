@@ -90,10 +90,14 @@ using cxa_throw_type = void(void*, std::type_info*, void (*)(void*));
 static cxa_throw_type* original_cxa_throw = (cxa_throw_type*)dlsym(RTLD_NEXT, "__cxa_throw");
 extern "C" {
 //And NOW override it
-void __cxa_throw(void*           thrown_exception,
-                 std::type_info* pvtinfo,
-                 void (*dest)(void*)) {
-
+//void __cxa_throw(void*           thrown_exception,
+//                 std::type_info* pvtinfo,
+//                 void (*dest)(void*)) {
+void __cxa_throw(
+		void* thrown_exception,  
+		void* pvtinfo,
+		void (*dest)(void*)){
+	
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
 	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
@@ -105,17 +109,17 @@ void __cxa_throw(void*           thrown_exception,
 		 * The exception point will be printed in case of missed catch
 		 * In fact we have to do nothing to properly managed them!
 		 */
-		original_cxa_throw(thrown_exception, pvtinfo, dest);
+		original_cxa_throw(thrown_exception, (std::type_info*)pvtinfo, dest);
 	} else {
 		if (cxaLevel == CxaLevel::none) {
 			//reset after use
 			cxaLevel = CxaLevel::critical;
-			original_cxa_throw(thrown_exception, pvtinfo, dest);
+			original_cxa_throw(thrown_exception, (std::type_info*)pvtinfo, dest);
 		}
 		static const QString x;
 		static const auto    qstringCode = typeid(x).hash_code();
 
-		auto exceptionTypeCode = pvtinfo->hash_code();
+		auto exceptionTypeCode = ((std::type_info*)pvtinfo)->hash_code();
 
 		QString msg;
 		if (cxaNoStack) {
@@ -151,7 +155,7 @@ void __cxa_throw(void*           thrown_exception,
 		//reset after use
 		cxaLevel = CxaLevel::critical;
 		//this will pass tru the exception to the original handler so the program will not catch fire after an exception is thrown
-		original_cxa_throw(thrown_exception, pvtinfo, dest);
+		original_cxa_throw(thrown_exception, (std::type_info*)pvtinfo, dest);
 	}
 }
 }
