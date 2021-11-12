@@ -1,11 +1,9 @@
 #include "httpexception.h"
 
-HttpException::HttpException(QString e, bool _die) {
+HttpException::HttpException(QString e) {
 	msg = e.toUtf8();
-	die = _die;
 }
 
-HttpException::HttpException(std::string e, bool _die) {
+HttpException::HttpException(std::string e) {
 	msg = QByteArray::fromStdString(e);
-	die = _die;
 }

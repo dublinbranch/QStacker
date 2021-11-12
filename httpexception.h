@@ -6,11 +6,8 @@
 
 class HttpException : public ExceptionV2 {
 	  public:
-	// to simulate php die()
-	bool die = false;
-
-	HttpException(QString e, bool _die);
-	HttpException(std::string e, bool _die);
+	HttpException(QString e);
+	HttpException(std::string e);
 };
 
 #endif // HTTPEXCEPTION_H
