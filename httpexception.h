@@ -8,6 +8,7 @@ class HttpException : public ExceptionV2 {
 	  public:
 	HttpException(QString e);
 	HttpException(std::string e);
+	HttpException(const char* e);
 };
 
 #endif // HTTPEXCEPTION_H

@@ -7,3 +7,7 @@ HttpException::HttpException(QString e) {
 HttpException::HttpException(std::string e) {
 	msg = QByteArray::fromStdString(e);
 }
+
+HttpException::HttpException(const char *e) {
+	msg = e;
+}
