@@ -95,7 +95,7 @@ extern "C" {
 //                 void (*dest)(void*)) {
 void __cxa_throw(
     void*           thrown_exception,
-    std::type_info* pvtinfo,
+    void* pvtinfo,
     void (*dest)(void*)) {
 
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
