@@ -111,45 +111,42 @@ void __cxa_throw(
 		 */
 		original_cxa_throw(thrown_exception, (std::type_info*)pvtinfo, dest);
 	} else {
-		if (cxaLevel == CxaLevel::none) {
-			//reset after use
-			cxaLevel = CxaLevel::critical;
-			original_cxa_throw(thrown_exception, (std::type_info*)pvtinfo, dest);
-		}
-		static const QString x;
-		static const auto    qstringCode          = typeid(x).hash_code();
-		static const auto    stdExceptionTypeCode = typeid(std::exception).hash_code();
+		if (cxaLevel != CxaLevel::none) {
+			static const QString x;
+			static const auto    qstringCode          = typeid(x).hash_code();
+			static const auto    stdExceptionTypeCode = typeid(std::exception).hash_code();
 
-		auto exceptionTypeCode = ((std::type_info*)pvtinfo)->hash_code();
+			auto exceptionTypeCode = ((std::type_info*)pvtinfo)->hash_code();
 
-		QString msg;
-		if (cxaNoStack) {
-			cxaNoStack = false;
-		} else {
-			msg = QStacker16Light(5);
-		}
+			QString msg;
 
-		if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
-			auto th = static_cast<QString*>(thrown_exception);
-			msg.prepend(*th);
-		} else if (exceptionTypeCode == stdExceptionTypeCode) {
-			auto th = static_cast<std::exception*>(thrown_exception);
-			msg.prepend(th->what());
-		}
+			if (cxaNoStack) {
+				cxaNoStack = false;
+			} else {
+				msg = QStacker16Light(5);
+			}
 
-		switch (cxaLevel) {
-		case CxaLevel::warn:
-			qWarning().noquote() << QStacker16Light() << msg;
-			break;
-		case CxaLevel::debug:
-			qDebug().noquote() << QStacker16Light() << msg;
-			break;
-		case CxaLevel::critical:
-			qWarning().noquote() << QStacker16Light() << msg;
-			break;
-		case CxaLevel::none:
-			//none
-			break;
+			if (exceptionTypeCode == qstringCode) { //IF QString has been thrown is by us, and usually handled too
+				auto th = static_cast<QString*>(thrown_exception);
+				msg.prepend(*th);
+			} else if (exceptionTypeCode == stdExceptionTypeCode) {
+				auto th = static_cast<std::exception*>(thrown_exception);
+				msg.prepend(th->what());
+			}
+			switch (cxaLevel) {
+			case CxaLevel::warn:
+				qWarning().noquote() << msg;
+				break;
+			case CxaLevel::debug:
+				qDebug().noquote() << msg;
+				break;
+			case CxaLevel::critical:
+				qWarning().noquote() << msg;
+				break;
+			case CxaLevel::none:
+				//none mostly to avoid the warning
+				break;
+			}
 		}
 
 		//reset after use
