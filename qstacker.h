@@ -22,6 +22,7 @@ Q_REQUIRED_RESULT QString     QStacker16Light(uint skip = 5, QStackerOpt opt = Q
  * It must be the name of the folder from which the code has been compiled
  */
 inline std::string StackerMinLevel;
+inline uint        stackerMaxFrame = 99;
 // Next throw will not append stack trace, reset after use
 inline thread_local bool cxaNoStack = false;
 

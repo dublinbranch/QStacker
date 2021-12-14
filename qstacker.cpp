@@ -24,7 +24,7 @@ std::string stacker(uint skip, QStackerOpt opt) {
 	}
 
 	StackTrace st;
-	st.load_here(99);
+	st.load_here(stackerMaxFrame);
 	st.skip_n_firsts(skip); //skip internal lib stuff
 
 	Printer p;
@@ -63,7 +63,7 @@ QString QStacker16(uint skip, QStackerOpt opt) {
 }
 
 /**
- * @brief qt_assert_x is the internal handle used by qt to report error, sadly is missing the stack trace so 99% of the time 
+ * @brief qt_assert_x is the internal handle used by qt to report error, sadly is missing the stack trace so 99% of the time
  * you have ABSOLUTELY no clue where it happened, fixed!
  * @param where
  * @param what
@@ -94,10 +94,10 @@ extern "C" {
 //                 std::type_info* pvtinfo,
 //                 void (*dest)(void*)) {
 void __cxa_throw(
-		void* thrown_exception,  
-		void* pvtinfo,
-		void (*dest)(void*)){
-	
+    void* thrown_exception,
+    void* pvtinfo,
+    void (*dest)(void*)) {
+
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
 	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
