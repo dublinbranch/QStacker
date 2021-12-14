@@ -1,7 +1,6 @@
 #ifndef ASSTRING_H
 #define ASSTRING_H
 
-#include "minMysql/min_mysql.h"
 #include <QDebug>
 #include <QList>
 #include <QString>
@@ -12,7 +11,5 @@ QString asString(QList<T> t) {
 	QDebug(&cry) << t;
 	return cry;
 }
-
-QString asString(sqlRow& row);
 
 #endif // ASSTRING_H
