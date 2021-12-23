@@ -8,9 +8,12 @@ class ExceptionV2 : public std::exception {
       public:
 	//This is an ugly hack to achieve a weird objective, but is a quite commont techique https://en.wikipedia.org/wiki/Hexspeak
 	//We cast the obj and check if start with that to know is ours
-	static constexpr ulong uukey      = 0xBADBEEFBADBEEF02;
-	const ulong            canaryKey  = uukey;
-	bool                   forcePrint = false;
+	static constexpr ulong uukey     = 0xBADBEEFBADBEEF02;
+	const ulong            canaryKey = uukey;
+	//This will force the exception to print immediately in case is a "bad error" that we need to be informed about
+	bool forcePrint = false;
+	//This will SKIP printing when we handle the exception, in case is a minor thing and just save in the log
+	bool skipCatchPrint = false;
 
 	ExceptionV2() = default;
 	ExceptionV2(const QString& _msg, uint skip = 4);
@@ -26,26 +29,26 @@ class ExceptionV2 : public std::exception {
 };
 
 /*
-To extend do something like 
+To extend do something like
 
 class BadRequestEx : public ExceptionV2 {
       public:
-	BadRequestEx(const QString& _msg)
-	    : ExceptionV2(_msg, 6) {
-	}
+        BadRequestEx(const QString& _msg)
+            : ExceptionV2(_msg, 6) {
+        }
 };
 
-Or for something more creative 
+Or for something more creative
 
 class DBException : public ExceptionV2 {
       public:
-	enum Error : int {
-		NA = 0,
-		Connection,
-		Warning,
-		SchemaError
-	} errorType = Error::NA;
-	DBException(const QString& _msg, Error error);
+        enum Error : int {
+                NA = 0,
+                Connection,
+                Warning,
+                SchemaError
+        } errorType = Error::NA;
+        DBException(const QString& _msg, Error error);
 };
 
 */
