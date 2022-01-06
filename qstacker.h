@@ -3,6 +3,8 @@
 
 #include "exceptionv2.h"
 #include <QByteArray>
+//Used to monitor how many exception are beeing thrown over time by hacheck, a few are ok, too many no!
+inline std::atomic<uint> exceptionThrown{0};
 
 struct QStackerOpt {
 	bool snippet = true;

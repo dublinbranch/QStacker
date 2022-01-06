@@ -98,6 +98,8 @@ void __cxa_throw(
     void* pvtinfo,
     void (*dest)(void*)) {
 
+	exceptionThrown++;
+
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
 	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
