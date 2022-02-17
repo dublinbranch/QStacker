@@ -1,5 +1,8 @@
 #include "httpexception.h"
 
+//TODO
+// codice duplicato: chiamare costruttore di padre
+// vedere se error e data sono usati
 HttpException::HttpException(QString _msg, bool _error, const QByteArray _data) {
 	msg   = _msg.toUtf8().data();
 	error = _error;
