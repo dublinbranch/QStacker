@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <exception>
+#include <source_location>
 
 class ExceptionV2 : public std::exception {
       public:
@@ -20,7 +21,17 @@ class ExceptionV2 : public std::exception {
 	ExceptionV2(const char* _msg, uint skip = 4);
 	ExceptionV2(const std::string& _msg, uint skip = 4);
 
+	static ExceptionV2 raw(const std::string& _msg);
+	static ExceptionV2 location(const std::string& _msg, const std::source_location location =
+	                                                         std::source_location::current());
+
+	static ExceptionV2 location(const QString& _msg, const std::source_location location =
+	                                                     std::source_location::current());
+
 	const char* what() const noexcept override;
+
+	void setMsg(const QByteArray& newMsg);
+	void setMsg(const std::string& newMsg);
 
       protected:
 	QByteArray msg;
