@@ -23,11 +23,13 @@ ExceptionV2 ExceptionV2::raw(const std::string& _msg) {
 ExceptionV2 ExceptionV2::location(const std::string& _msg, const std::source_location location) {
 	ExceptionV2 e;
 	e.setMsg(_msg + " in " + locationFull(location));
+	return e;
 }
 
 ExceptionV2 ExceptionV2::location(const QString& _msg, const std::source_location location) {
 	ExceptionV2 e;
 	e.setMsg(_msg.toStdString() + " in " + locationFull(location));
+	return e;
 }
 
 const char* ExceptionV2::what() const noexcept {
