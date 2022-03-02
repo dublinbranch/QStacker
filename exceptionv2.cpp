@@ -18,6 +18,7 @@ ExceptionV2::ExceptionV2(const std::string& _msg, uint skip) {
 ExceptionV2 ExceptionV2::raw(const std::string& _msg) {
 	ExceptionV2 e;
 	e.setMsg(_msg);
+	return e;
 }
 
 ExceptionV2 ExceptionV2::location(const std::string& _msg, const std::source_location location) {
