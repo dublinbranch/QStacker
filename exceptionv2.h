@@ -39,6 +39,8 @@ class ExceptionV2 : public std::exception {
       private:
 };
 
+const char* currentExceptionTypeName();
+
 /*
 To extend do something like
 

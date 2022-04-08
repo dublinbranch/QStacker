@@ -2,6 +2,7 @@
 #include "fileFunction/sourcelocation.h"
 #include "qstacker.h"
 #include <QString>
+#include <cxxabi.h>
 
 ExceptionV2::ExceptionV2(const QString& _msg, uint skip) {
 	msg = _msg.toUtf8() + QStacker(skip);
@@ -43,4 +44,9 @@ void ExceptionV2::setMsg(const QByteArray& newMsg) {
 
 void ExceptionV2::setMsg(const std::string& newMsg) {
 	msg = QByteArray::fromStdString(newMsg);
+}
+
+const char* currentExceptionTypeName() {
+	int status;
+	return abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status);
 }
