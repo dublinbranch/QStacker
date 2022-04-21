@@ -34,6 +34,10 @@ ExceptionV2 ExceptionV2::location(const QString& _msg, const std::source_locatio
 	return e;
 }
 
+const QString& ExceptionV2::getLogFile() const noexcept {
+	return logFile;
+}
+
 const char* ExceptionV2::what() const noexcept {
 	return msg.constData();
 }
