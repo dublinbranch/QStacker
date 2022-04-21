@@ -4,6 +4,9 @@
 #include <QByteArray>
 #include <exception>
 #include <source_location>
+#include <QString>
+
+#define QSL(str) QStringLiteral(str)
 
 class ExceptionV2 : public std::exception {
       public:
@@ -28,15 +31,16 @@ class ExceptionV2 : public std::exception {
 	static ExceptionV2 location(const QString& _msg, const std::source_location location =
 	                                                     std::source_location::current());
 
-	const QString& logFile() const noexcept override;
-	const char* what() const noexcept override;
+	virtual const QString& getLogFile() const noexcept;
+	const char*            what() const noexcept override;
 
 	void setMsg(const QByteArray& newMsg);
 	void setMsg(const std::string& newMsg);
 
       protected:
 	QByteArray msg;
-	QString logFile = QSL("stdException.log");
+	QString    logFile = QSL("stdException.log");
+
       private:
 };
 
