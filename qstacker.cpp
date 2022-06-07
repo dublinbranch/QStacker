@@ -90,9 +90,12 @@ using cxa_throw_type = void(void*, std::type_info*, void (*)(void*));
 static cxa_throw_type* original_cxa_throw = (cxa_throw_type*)dlsym(RTLD_NEXT, "__cxa_throw");
 extern "C" {
 //And NOW override it
+
+/// If we use the full signature it will complain we are redefining something
 //void __cxa_throw(void*           thrown_exception,
 //                 std::type_info* pvtinfo,
 //                 void (*dest)(void*)) {
+
 void __cxa_throw(
     void* thrown_exception,
     void* pvtinfo,
@@ -102,8 +105,8 @@ void __cxa_throw(
 
 	//New (as of 12/2020 way of managing excetion, with ExceptionV2
 	//force a cast and look for our token
-	const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
-	if (v2->canaryKey == ExceptionV2::uukey) {
+	if (ExceptionV2::isExceptionV2Derived(thrown_exception)) {
+		const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
 		if (v2->forcePrint) {
 			qCritical() << v2->what();
 		}

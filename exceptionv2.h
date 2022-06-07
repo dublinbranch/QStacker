@@ -30,7 +30,9 @@ class ExceptionV2 : public std::exception {
 
 	static ExceptionV2 location(const QString& _msg, const std::source_location location =
 	                                                     std::source_location::current());
-
+    
+    __attribute__((no_sanitize("address"))) static bool isExceptionV2Derived(void *ptr);
+    
 	virtual const QString& getLogFile() const noexcept;;
 	const char* what() const noexcept override;
 

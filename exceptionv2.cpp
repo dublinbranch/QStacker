@@ -34,6 +34,16 @@ ExceptionV2 ExceptionV2::location(const QString& _msg, const std::source_locatio
 	return e;
 }
 
+/// We must mark this function to be skipped by lib asan as we do this unsafe operation
+/// const auto* v2 = static_cast<ExceptionV2*>(thrown_exception);
+/// if (v2->canaryKey == ExceptionV2::uukey) {
+/// which is in case of a non ExceptionV2 and out of bound access!
+/// https://clang.llvm.org/docs/AddressSanitizer.html#issue-suppression
+__attribute__((no_sanitize("address"))) bool ExceptionV2::isExceptionV2Derived(void* ptr) {
+	const auto* v2 = static_cast<ExceptionV2*>(ptr);
+	return v2->canaryKey == ExceptionV2::uukey;
+}
+
 const QString& ExceptionV2::getLogFile() const noexcept {
 	return logFile;
 }
